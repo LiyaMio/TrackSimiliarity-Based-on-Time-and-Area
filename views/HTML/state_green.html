@@ -1,0 +1,210 @@
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="csrf-token" content="vXqNKnW2bbvLKBhahgFJNeE4f6ZkUNOzjRP0PGb1">
+    <link rel="stylesheet" href="views/CSS/font-awesome.css">
+
+    <title>
+        司机信息
+    </title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+
+    <style>
+        @keyframes myfirst {
+            from {
+                filter: hue-rotate(0deg)
+            }
+            to {
+                filter: hue-rotate(40deg)
+            }
+        }
+
+        body {
+            background-image: linear-gradient(to top, antiquewhite 0%, lightskyblue 100%);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #infoBox {
+            width: 45%;
+            height: auto;
+            margin: 0 auto;
+            margin-top: 5%;
+            text-align: center;
+            background: #00000099;
+            padding: 20px 50px;
+            color: antiquewhite;
+            font-family: 楷体;
+            border-radius: 15px;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        #infoBox .Tittle {
+            color: lightskyblue;
+            font-size: x-large;
+            font-family: 华文楷体;
+            font-weight: bold;
+        }
+
+        #infoBox button {
+            border: 0;
+            margin-top: 15px;
+            width: 125px;
+            height: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            background-image: linear-gradient(to right, antiquewhite 0%, lightskyblue 100%);
+            border-radius: 15px;
+            font-family: "微软雅黑 Light";
+
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(calc(89vh + 100%));
+            }
+        }
+
+        .binary {
+            position: absolute;
+            font-family: monospace;
+            color: lightskyblue;
+            font-size: 20px;
+            animation: fall 10s linear infinite;
+        }
+
+        video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            background-size: cover;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 0.5; /* 调整透明度 */
+            z-index: -50;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<video autoplay muted loop id="myVideo">
+    <source src="views/IMG/rain.mp4" type="video/mp4">
+
+</video>
+<div class="overlay"></div>
+
+<div id="infoBox">
+    <button onclick="Copy()">一键拷贝</button>
+    <p class="Tittle">你所寻找的师傅可能的信息如下：</p>
+
+</div>
+<script>
+    function generateInfoBlock(number, carID, phoneID, nameID) {
+        return `
+        <div>
+            <span class="Tittle">师傅${number}<br></span>
+            <span>车牌号为：${carID}<br></span>
+
+            <span>电话号码:${phoneID}<br></span>
+
+            <span>名称：${nameID}<br><br></span>
+
+        </div>
+    `;
+    }
+
+
+</script>
+
+
+<script>
+    function createBinary() {
+        let binary = document.createElement('div');
+        binary.classList.add('binary');
+        binary.innerText = Math.round(Math.random());
+        let tmp;
+        while (1) {
+            tmp = Math.random() * window.innerWidth;
+            if (tmp < window.innerWidth * 0.26 || tmp > window.innerWidth * 0.74)
+                break;
+        }
+        binary.style.left = tmp + 'px';
+
+        binary.style.top = -Math.random() * window.innerHeight + 'px';
+        binary.style.animationDuration = Math.random() * 5 + 5 + 's';
+        document.body.appendChild(binary);
+
+        setTimeout(() => {
+            binary.remove();
+            createBinary();
+        }, (parseFloat(binary.style.animationDuration) * 1000));
+    }
+
+    for (let i = 0; i < 0; i++) {
+        createBinary();
+    }
+    let stringData;
+    let newData;
+    $.ajax({
+        type: "GET",
+        url: '/json',
+        dataType: 'JSON',
+        success: function (res) {
+            //res便是的数据便是后端拿到的数据
+            //这里需要注意：res为局部变量，
+            //所以需要在方法外定义一个变量把res赋值给他，才能在方法之外使用。
+            newData = res;
+            stringData = JSON.stringify(newData);
+
+            console.log(res.data.length)
+            for (let i = 0; i <= res.data.length; i++) {
+                document.getElementById("infoBox").innerHTML += generateInfoBlock(i, res.data[i]["id"], res.data[i]["name"], res.data[i]["phone"]);
+            }
+
+        }
+    })
+
+    function Copy() {
+        navigator.clipboard.writeText(stringData).then(
+            () => {
+                console.log("粘贴文本成功");
+            },
+            () => {
+                console.log("clipboard write failed");
+            }
+        );
+    }
+
+
+</script>
+</body>
+
+</html>
+
+
+

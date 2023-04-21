@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>根据城市设置城市中心点</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript"
+            src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=y7HDGXWvnnshAcXLdAtxki21Oz3vRbUm"></script>
+    <link href="//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"  crossorigin="anonymous">
+    <script type="text/javascript"
+            src="//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+    <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=y7HDGXWvnnshAcXLdAtxki21Oz3vRbUm"></script>
+<!--    <link rel="stylesheet" href="../bootstrap/bootstrap-5.3.0-alpha1/dist/css">-->
+<!--    <script src="../bootstrap/bootstrap-5.3.0-alpha1/dist/js"></script>-->
+    <link rel="stylesheet" href="../CSS/map.css">
+    <script src="../JS/map.js"></script>
+</head>
+<body  onload="loadMapScenario()">
+<div class="time-area" id="time-input">
+    开始时间<input id="stime" type="datetime-local">
+    <br/>
+    结束时间<input id="etime" type="datetime-local">
+    <br/>
+    <button type="submit" onclick="submitPath()">提交</button>
+</div>
+<div class="time-area" id="time-input2">
+    开始时间<input id="sstime" type="datetime-local">
+    <br/>  <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    结束时间<input id="eetime" type="datetime-local">
+    <br/>
+    <button type="submit" onclick="submitTime()">提交</button>
+</div>
+<ul class="drawing-panel">
+    <li class="bmap-btn bmap-polyline" id="polyline" onclick="draw(this)"></li>
+</ul>
+<!--<div><i class="bi bi-person-fill" id="user"></i></div>-->
+<div id="container"></div>
+<div >
+    <div class="user">
+        <ul class="list-group memberlist">
+        </ul>
+        <a href="javascript:void(0)" onclick="" data-toggle="modal" data-target="#exampleModal" class="#exampleModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16" id="login">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+<!--            登录-->
+        </a>
+        <a href="javascript:void(0)" onclick="tracklist()" data-toggle="modal" data-target="#trackModal" class="#exampleModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z"/>
+                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
+            </svg>
+        </a>
+    </div>
+    <div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">登录</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputName">用户名</label>
+                            <input class="form-control" id="exampleInputName">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPwd" type="password">密码</label>
+                            <input class="form-control" id="exampleInputPwd" placeholder="密码" type="password" >
+                        </div>
+                        <a href="" data-toggle="modal" data-target="#registerModal" class="#registerModal"> 没有账户？点此注册</a>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" onclick="login()"
+                            data-dismiss="modal">登录
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="registerModal" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">注册</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="registerInputName">用户名</label>
+                            <input class="form-control" id="registerInputName">
+                        </div>
+                        <div class="form-group">
+                            <label for="registerInputPwd" type="password">密码</label>
+                            <input class="form-control" id="registerInputPwd" placeholder="密码" type="password" >
+                        </div>
+                        <div class="form-group">
+                            <label for="registerConfirmInputPwd">确认密码</label>
+                            <input class="form-control" id="registerConfirmInputPwd" type="password" placeholder="密码" >
+
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" onclick="regist()" id="register"
+                            >注册
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade  modal-dialog-scrollable" id="trackModal" aria-labelledby="trackModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="trackModalLabel">常用轨迹</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="tracklist">
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                        <li class="list-group-item">A fourth item</li>
+                        <li class="list-group-item">And a fifth one</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="chooseTrack()">选择</button>
+                    <button type="submit" class="btn btn-primary" onclick="AddTrack(this)"
+                            data-dismiss="modal">添加轨迹
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="addtrackModal" aria-labelledby="addtrackModalLabel" >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addtrackModalLabel">轨迹名称</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+<!--                            <label for="exampleInputName">轨迹名称</label>-->
+                            <input class="form-control" id="addtrackInputName">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" onclick="submitTrack()"
+                            data-dismiss="modal">确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // setTimeout(()=>{alert("本地图由百度地图API提供已校对，采用中国国家标准地图")},2000)
+
+</script>
+<div style="position: absolute; bottom: 10px; right: 10px;">本地图由百度地图API提供已校对，采用中国国家标准地图</div>
+
+</body>
+</html>
+<script>
+    // drawpath()
+</script>
+

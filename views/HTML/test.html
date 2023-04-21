@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>根据城市设置城市中心点</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript"
+            src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=y7HDGXWvnnshAcXLdAtxki21Oz3vRbUm"></script>
+    <link href="//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"  crossorigin="anonymous">
+    <script type="text/javascript"
+            src="//mapopen.cdn.bcebos.com/github/BMapGLLib/DrawingManager/src/DrawingManager.min.js"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+    <script src="https://s3.pstatp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+    <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=y7HDGXWvnnshAcXLdAtxki21Oz3vRbUm"></script>
+
+</head>
+<body  >
+<div class="time-area" id="time-input">
+    开始时间<input id="stime" type="datetime-local">
+    <br/>
+    结束时间<input id="etime" type="datetime-local">
+    <br/>
+    <button type="submit" onclick="submitPath()">提交</button>
+</div>
+<ul class="drawing-panel">
+    <li class="bmap-btn bmap-polyline" id="polyline" onclick="draw(this)"></li>
+</ul>
+
+<div id="container"></div>
+<div class="user">
+    <div>
+        <ul class="list-group memberlist">
+        </ul>
+        <a href="javascript:void(0)" onclick="" data-toggle="modal" data-target="#exampleModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16" id="login">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            </svg>
+            <!--            登录-->
+        </a>
+    </div>
+    <div class="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">添加家庭成员</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputId">证件号</label>
+                            <input class="form-control" id="exampleInputId" aria-describedby="emailHelp">
+                            <small id="emailHelp" class="form-text text-muted">请输入居民身份证号</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputName">姓名</label>
+                            <input class="form-control" id="exampleInputName">
+                        </div>
+                        <!--                        <button type="submit" class="btn btn-primary" onclick="addmember()">Submit</button>-->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button type="submit" class="btn btn-primary" onclick="addmember();showmember()"
+                            data-dismiss="modal">添加
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    // setTimeout(()=>{alert("本地图由百度地图API提供已校对，采用中国国家标准地图")},2000)
+
+</script>
+<div style="position: absolute; bottom: 10px; right: 10px;">本地图由百度地图API提供已校对，采用中国国家标准地图</div>
+
+</body>
+</html>
+<script>
+    // drawpath()
+</script>
+
