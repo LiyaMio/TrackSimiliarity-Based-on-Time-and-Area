@@ -32,4 +32,6 @@ type Date struct {
 	Stime string `json:"stime"`
 	Etime string `json:"etime"`
 	Node  []Node `json:"path"`
+	E string `json:"距离阈值"`
+	T string `json:"时间阈值"`
 }

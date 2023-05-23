@@ -45,21 +45,58 @@
     <li class="bmap-btn bmap-polyline" id="polyline" onclick="draw(this)"></li>
 </ul>
 <!--<div><i class="bi bi-person-fill" id="user"></i></div>-->
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="background-color: #e3f2fd;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">轨迹匹配</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link #exampleModal"  href="javascript:void(0)" onclick="tracklist()" data-toggle="modal" data-target="#trackModal">常用轨迹</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        距离阈值
+                    </a>
+                    <ul class="dropdown-menu" id="evalue">
+                        <li><a class="dropdown-item" href="#" onclick="getE(this)">默认阈值</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="getE(this)">0.4</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="getE(this)">2</a></li>
+<!--                        <li><a class="dropdown-item" href="#"><input type="text"></a></li>-->
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        时间阈值
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" onclick="getT(this)">默认阈值</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="getT(this)">20</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="getT(this)">20000</a></li>
+                        <!--                        <li><a class="dropdown-item" href="#"><input type="text"></a></li>-->
+                    </ul>
+
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
 <div id="container"></div>
 <div >
     <div class="user">
         <ul class="list-group memberlist">
         </ul>
+        <a href="javascript:void(0)" onclick="" data-toggle="modal" data-target="#helpModal" class="#helpModal">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-lg" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M4.475 5.458c-.284 0-.514-.237-.47-.517C4.28 3.24 5.576 2 7.825 2c2.25 0 3.767 1.36 3.767 3.215 0 1.344-.665 2.288-1.79 2.973-1.1.659-1.414 1.118-1.414 2.01v.03a.5.5 0 0 1-.5.5h-.77a.5.5 0 0 1-.5-.495l-.003-.2c-.043-1.221.477-2.001 1.645-2.712 1.03-.632 1.397-1.135 1.397-2.028 0-.979-.758-1.698-1.926-1.698-1.009 0-1.71.529-1.938 1.402-.066.254-.278.461-.54.461h-.777ZM7.496 14c.622 0 1.095-.474 1.095-1.09 0-.618-.473-1.092-1.095-1.092-.606 0-1.087.474-1.087 1.091S6.89 14 7.496 14Z"/>
+            </svg>
+        </a>
         <a href="javascript:void(0)" onclick="" data-toggle="modal" data-target="#exampleModal" class="#exampleModal">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16" id="login">
                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-            </svg>
-<!--            登录-->
-        </a>
-        <a href="javascript:void(0)" onclick="tracklist()" data-toggle="modal" data-target="#trackModal" class="#exampleModal">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8l3-4z"/>
-                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
             </svg>
         </a>
     </div>
@@ -148,6 +185,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="chooseTrack()">选择</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="deleteTrack()">删除</button>
                     <button type="submit" class="btn btn-primary" onclick="AddTrack(this)"
                             data-dismiss="modal">添加轨迹
                     </button>
@@ -181,6 +219,73 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="contrastModal" aria-labelledby="contrastModalLabel" data-bs-backdrop="static" >
+        <div class="modal-dialog position-absolute bottom-0 end-0 ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="contrastModalLabel">对比结果</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="contrastmap">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="thresholdModal" aria-labelledby="thresholdModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="thresholdModalLabel">阈值选择</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputName">距离阈值</label>
+                            <input class="form-control" id="thresholdD"  placeholder="当前阈值为默认阈值"   onkeyup="onlyNumber(this);">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPwd" type="password">时间阈值</label>
+                            <input class="form-control" id="thresholdT" placeholder="当前阈值为默认阈值" onkeyup="onlyNumber(this);">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="contrast()"
+                            data-dismiss="modal">确认
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="helpModal"  data-bs-keyboard="false" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="helpModalLabel">帮助</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>阈值功能：用户可以在标注轨迹前选择距离阈值与时间阈值，阈值越小轨迹精确度越高。</p>
+                <p>阈值对比功能：用户可以在获得结果后继续为此轨迹选择不同阈值，并将不同阈值下得结果与本次比对结果进行同步显示。</p>
+                <p>注意：阈值对比功能中得结果需要从"阈值对比-对比结果"进入</p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary"
+                        data-dismiss="modal">确认
+                </button>
+            </div>
+        </div>
+    </div>
+
 </div>
 <script>
     // setTimeout(()=>{alert("本地图由百度地图API提供已校对，采用中国国家标准地图")},2000)

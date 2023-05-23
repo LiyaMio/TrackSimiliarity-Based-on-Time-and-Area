@@ -20,11 +20,11 @@ type point struct {
 	minute [100]int
 }
 
-var m int         //患者点的个数
-var patient point //患者的移动点
-var n int         //输入点的个数
-var p point       //输入的点
-var extrap point  //用函数式求的点
+var m int
+var patient point
+var n int
+var p point
+var extrap point
 var db *sql.DB
 func init(){
 	var err error
@@ -47,16 +47,17 @@ func EarthDistance(lat1, lng1, lat2, lng2 float64) float64 {
 }
 
 //e取0.4，点距离比较
-func distance(n int, p point) int {
+func distance(n int, p point,e float64) int {
 	if n==0 {return -100}
 	var m int
-	var (
-		c, e float64
-	)
+	//var (
+	//	c, e float64
+	//)
 	var f int
+	var c float64
 	f = 0
 	m = 90%n
-	e = 0.4
+	//e = 0.4
 	arr:=90/n
 	for i := 0; i < n; i++ {
 		for j := 0; j < m; j++ {
@@ -76,30 +77,6 @@ func distance(n int, p point) int {
 						f = f + 1
 					}
 				}
-			}
-		}
-	}
-	return f
-}
-
-//e取0.5面积比较
-func area(n int, p point) int {
-	var m int
-	var (
-		s, e float64
-	)
-	var f int
-	f = 0
-	m = 80
-	e = 0.000005
-	for i := 0; i < n; i++ {
-		for j := 0; j < m; j++ {
-			s = (patient.x1[j] - p.x1[i]) * (patient.x2[j] - p.x2[i]) * 0.5
-			if s < 0 {
-				s = 0 - s
-			}
-			if s <= e {
-				f = f + 1
 			}
 		}
 	}
@@ -143,7 +120,7 @@ func timehanshu(a1, a2, b1, b2,arr int) {
 }
 
 //时间预判断
-func timejudgef(n int, p point) int {
+func timejudgef(n int, p point,t float64) int {
 	var judge int
 	judge = 0
 
@@ -155,12 +132,10 @@ func timejudgef(n int, p point) int {
 			} else{
 				hou := p.hour[0] - patient.hour[0]
 				min := (p.minute[0] - patient.minute[0]) + hou*60
-				fmt.Printf("patient %v %v\n",patient.hour[0],patient.minute[0])
-				fmt.Printf("p %v %v\n",p.hour[0],p.minute[0])
-				if min < 0 {
+				if float64(min) < 0 {
 					min = 0 - min
 				}
-				if min < 20 {
+				if float64(min) < t {
 					judge=0
 
 				}else{
@@ -168,12 +143,10 @@ func timejudgef(n int, p point) int {
 				}
 				hou = p.hour[1] - patient.hour[1]
 				min = (p.minute[1] - patient.minute[1]) + hou*60
-				fmt.Printf("patient %v %v\n",patient.hour[1],patient.minute[1])
-				fmt.Printf("p %v %v\n",p.hour[1],p.minute[1])
 				if min < 0 {
 					min = 0 - min
 				}
-				if min < 20 {
+				if float64(min)< t {
 					judge=0
 
 				}else{
@@ -233,18 +206,6 @@ func timejudge(n int, p point) int {
 	//	fmt.Printf("%d\n",f)
 	return f
 }
-
-//判断危险等级
-func judge(fen int) string {
-	if fen >= 0 && fen <= 5 {
-		return "C"
-	} else if fen > 6 && fen <= 20 {
-		return "B"
-	} else {
-		return "A"
-	}
-
-}
 func parse_timestr_to_datetime(time_str string) time.Time {
 
 	t, error4 := time.Parse("2006-01-02 15:04:05", time_str)
@@ -253,8 +214,7 @@ func parse_timestr_to_datetime(time_str string) time.Time {
 	}
 	return t
 }
-func Count(now send.Date) ([]string,[]string) {
-	m = 6
+func Count(now send.Date,e float64,t float64) ([]string,[]string) {
 	fmt.Println("请输入您当日所到的地点数")
 	n = len(now.Node)
 	fmt.Println(n)
@@ -279,7 +239,6 @@ func Count(now send.Date) ([]string,[]string) {
 		p.x1[i] = now.Node[i].X
 		p.x2[i] = now.Node[i].Y
 	}
-	fmt.Println(p)
 	cnt := 1
 	var dict = make(map[string]int, 10)
 	var Tid []string
@@ -313,10 +272,10 @@ func Count(now send.Date) ([]string,[]string) {
 		patient.minute[1] = ed.Minute()
 		var fen float64
 		fen = 0
-		fen = float64(timejudgef(n,p))
+		fen = float64(timejudgef(n,p,t))
 		if fen >= 0 {
 			//fmt.Printf("%v %d\n",Tid,fen)
-			fen = float64(distance(n, p))
+			fen = float64(distance(n, p,e))
 			//fmt.Printf("fen is %v\n",fen)
 			//fmt.Printf("tid is %d\n",cnt)
 			//fmt.Printf("dis is %v",distance(n,p))
@@ -324,7 +283,7 @@ func Count(now send.Date) ([]string,[]string) {
 
 			if fen != 0 {
 				//dict[name] = fen
-				fmt.Printf("轨迹序号 %v",cnt)
+				fmt.Printf("轨迹序号 %v\n",cnt)
 				Tid= append(Tid, strconv.Itoa(cnt))
 			}
 

@@ -37,7 +37,6 @@ func Register(c*gin.Context){
 }
 var u user
 func Login(c*gin.Context){
-
 	c.ShouldBind(&u)
 	fmt.Println(u)
 	sqlStr:="select password from user where name = ?"
@@ -52,6 +51,8 @@ func Login(c*gin.Context){
 			c.JSON(200, gin.H{
 				"msg": "success",
 			})
+			c.SetCookie("cookie", u.Name, 3600, "/", "127.0.0.1", false, true)
+			//c.JSON(200,"success")
 		}else{
 			c.JSON(200, gin.H{
 				"msg": "密码不正确",
@@ -107,6 +108,7 @@ func InsertUserTrack(i int,t Track){
 	}
 }
 func SetCookie(c*gin.Context){
+	fmt.Println(u.Name)
 	c.SetCookie("cookie", u.Name, 3600, "/", "127.0.0.1", false, true)
 	c.JSON(200,"success")
 }
@@ -143,6 +145,11 @@ func ChooseTrack(c*gin.Context){
 	data.Etime=body["etime"]
 	name:=body["name"]
 	uname,err:= c.Cookie("cookie")
+	tmp:=body["距离阈值"]
+	e,_:=strconv.ParseFloat(tmp,64)
+	tmp=body["时间阈值"]
+	fmt.Printf("时间阈值%s\n",tmp)
+	t,_:=strconv.ParseFloat(tmp,64)
 	if err!=nil{
 		c.JSON(200,gin.H{
 			"msg":"登录已经过期，重新登录",
@@ -162,8 +169,7 @@ func ChooseTrack(c*gin.Context){
 				tmp.Y=y
 				data.Node= append(data.Node, tmp)
 			}
-			fmt.Println(data.Node)
-			_,tid := compute.Count(data)
+			_,tid := compute.Count(data,e,t)
 			fmt.Println(tid)
 			var track =make(map[string][][]string)
 			sqlStr="select * from trajectory"
@@ -195,4 +201,31 @@ func ChooseTrack(c*gin.Context){
 		}
 		}
 
+}
+func DeleteTrack(c*gin.Context){
+	d,_:=c.GetRawData()
+	var body map[string]string
+	_=json.Unmarshal(d,&body)
+	name:=body["name"]
+	uname,err:= c.Cookie("cookie")
+	if err!=nil{
+		c.JSON(200,gin.H{
+			"msg":"登录已经过期，重新登录",
+		})
+	}else{
+		var uid string
+		sqlStr:="select id from user where name =?"
+		db.QueryRow(sqlStr,uname).Scan(&uid)
+		sqlStr="delete from usertrack where uid=? and tname=?"
+		_,err=db.Exec(sqlStr,uid,name)
+		if err!=nil {
+			c.JSON(200, gin.H{
+				"msg": "删除失败",
+			})
+		}else{
+			c.JSON(200,gin.H{
+				"msg":"删除成功",
+			})
+		}
+	}
 }

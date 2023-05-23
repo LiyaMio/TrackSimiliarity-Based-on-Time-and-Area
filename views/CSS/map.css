@@ -28,9 +28,11 @@ html,
 }
 .bmap-polyline:hover{
     background: #eeeeee;
+    width: 120px;
 }
+
 .bmap-polyline:hover::after{
-    content: "添加行程";
+    content: "添加轨迹";
     text-align: center;
     display: block;
     margin-top: 10px;
@@ -132,4 +134,16 @@ svg{
 }
 .tracklist .list-group-item:hover{
     background-color: rgb(99, 152, 231);
+}
+#contrastmap{
+    width: 500px;
+    height:500px;
+}
+#contrastModal{
+    position:absolute;
+    bottom:0;
+    right:0;
+}
+#search{
+    width: 38px;
 }
