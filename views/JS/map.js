@@ -130,7 +130,18 @@ function submitPath() {
         contentType: 'application/json;charset=utf-8',
         async: false,
         success: function (data) {
-
+            $(".navbar-nav").append("\n" +
+                "                <li class=\"nav-item dropdown\">\n" +
+                "                    <a class=\"nav-link dropdown-toggle\" href=\"#\" role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
+                "                        阈值对比\n" +
+                "                    </a>\n" +
+                "                    <ul class=\"dropdown-menu\">\n" +
+                "                        <li><a class=\"nav-link #thresholdModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#thresholdModal\" onclick=\"contrast()\">阈值选择</a></li>\n" +
+                "                        <li><a class=\"nav-link #contrastModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#contrastModal\" >对比结果</a></li>\n" +
+                "\n" +
+                "                    </ul>\n" +
+                "\n" +
+                "                </li>")
             $("#time-input").hide()
             var map = new BMapGL.Map('container'); // 创建Map实例
             map.centerAndZoom('上海市', 12); // 初始化地图,设置中心点坐标和地图级别
@@ -164,18 +175,7 @@ function submitPath() {
                var polyline = new BMapGL.Polyline(linePoints, {strokeColor: "red", strokeWeight: 2, strokeOpacity: 0.5});   //创建折线
                 map.addOverlay(polyline);   //增加折线
             }
-            $(".search").before("\n" +
-                "                <li class=\"nav-item dropdown\">\n" +
-                "                    <a class=\"nav-link dropdown-toggle\" href=\"#\" role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
-                "                        阈值对比\n" +
-                "                    </a>\n" +
-                "                    <ul class=\"dropdown-menu\">\n" +
-                "                        <li><a class=\"nav-link #thresholdModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#thresholdModal\" onclick=\"contrast()\">阈值选择</a></li>\n" +
-                "                        <li><a class=\"nav-link #contrastModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#contrastModal\" >对比结果</a></li>\n" +
-                "\n" +
-                "                    </ul>\n" +
-                "\n" +
-                "                </li>")
+
         }
     })
 }
@@ -362,7 +362,18 @@ function submitTime() {
         contentType: 'application/json;charset=utf-8',
         async: false,
         success: function (data) {
-            console.log(data)
+            $(".navbar-nav").append("\n" +
+                "                <li class=\"nav-item dropdown\">\n" +
+                "                    <a class=\"nav-link dropdown-toggle\" href=\"#\" role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
+                "                        阈值对比\n" +
+                "                    </a>\n" +
+                "                    <ul class=\"dropdown-menu\">\n" +
+                "                        <li><a class=\"nav-link #thresholdModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#thresholdModal\" onclick=\"contrast()\">阈值选择</a></li>\n" +
+                "                        <li><a class=\"nav-link #contrastModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#contrastModal\" >对比结果</a></li>\n" +
+                "\n" +
+                "                    </ul>\n" +
+                "\n" +
+                "                </li>")
             var map = new BMapGL.Map('container'); // 创建Map实例
             map.centerAndZoom('上海市', 12); // 初始化地图,设置中心点坐标和地图级别
             map.enableScrollWheelZoom(true); // 开启鼠标滚轮缩放
@@ -395,18 +406,7 @@ function submitTime() {
                 var polyline = new BMapGL.Polyline(linePoints, {strokeColor: "red", strokeWeight: 2, strokeOpacity: 0.5});   //创建折线
                 map.addOverlay(polyline);   //增加折线
             }
-            $(".search").before("\n" +
-                "                <li class=\"nav-item dropdown\">\n" +
-                "                    <a class=\"nav-link dropdown-toggle\" href=\"#\" role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\">\n" +
-                "                        阈值对比\n" +
-                "                    </a>\n" +
-                "                    <ul class=\"dropdown-menu\">\n" +
-                "                        <li><a class=\"nav-link #thresholdModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#thresholdModal\" onclick=\"contrast()\">阈值选择</a></li>\n" +
-                "                        <li><a class=\"nav-link #contrastModal\"  href=\"javascript:void(0)\" data-toggle=\"modal\" data-target=\"#contrastModal\" >对比结果</a></li>\n" +
-                "\n" +
-                "                    </ul>\n" +
-                "\n" +
-                "                </li>")
+
         }
     })
 }

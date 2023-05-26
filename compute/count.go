@@ -100,25 +100,29 @@ func hanshu(x1, x2, y1, y2 float64,arr int) {
 }
 
 //函数取时间点
-func timehanshu(a1, a2, b1, b2,arr int) {
+func timehanshu(a1, a2, b1, b2,arr int) point {
+	var tmp point
 	var ho, mi int
 	ho = a2 - a1
 	mi = b2 - b1
 	if ho > 0 {
 		mi = mi + 60*ho
 	}
-	mi = mi / 6
+	fmt.Printf("min total %v \n",mi)
+	mi = mi / 60
 	for i := 0; i < arr; i++ {
 		b1 = b1 + mi
 		if b1 >= 60 {
 			b1 = b1 - 60
 			a1++
 		}
-		extrap.hour[i] = a1
-		extrap.minute[i] = b1
-	}
-}
+		tmp.hour[i] = a1
+		tmp.minute[i] = b1
 
+
+	}
+	return tmp
+}
 //时间预判断
 func timejudgef(n int, p point,t float64) int {
 	var judge int
@@ -164,44 +168,72 @@ func timejudgef(n int, p point,t float64) int {
 }
 
 ////时间判断
-func timejudge(n int, p point) int {
+func timejudge(n int, p point,t float64) int {
 
-	var hou, min, f int
+	var hou, min,f int
 	arr:=90/n
-	for i := 0; i < 2; i++ {
-		for j := 0; j < 2; j++ {
-			hou = p.hour[i] - patient.hour[j]
-			min = (p.minute[i] - patient.minute[j]) + hou*60
-			if min < 0 {
-				min = 0 - min
+	//for i := 0; i < 2; i++ {
+	//	for j := 0; j < 2; j++ {
+	//		hou = p.hour[i] - patient.hour[j]
+	//		min = (p.minute[i] - patient.minute[j]) + hou*60
+	//		if min < 0 {
+	//			min = 0 - min
+	//		}
+	//		if float64(min) < t {
+	//			f=1
+	//		}else{
+	//			return -1
+	//		}
+	//		fmt.Printf("时间判断1%v \n",min)
+	//	}
+	//	extrap=timehanshu(p.hour[i], p.hour[i+1], p.minute[i], p.minute[i+1],arr)
+	//	for j:=0;j<arr;j++{
+	//		fmt.Printf("h %v m %v \n",extrap.hour[j],extrap.minute[j])
+	//	}
+	//	//fmt.Println("输入时间")
+	//	//fmt.Println(extrap)
+	//	ptime:= timehanshu(patient.hour[i], patient.hour[i+1], patient.minute[i], patient.minute[i+1],arr)
+	//	//fmt.Println("比对时间")
+	//	//fmt.Println(ptime)
+	//	//fmt.Printf("时间判断2 %v %v \n", extrap.hour[0],extrap.minute[0])
+	//	//fmt.Printf("时间判断2 %v %v \n", extrap.hour[1],extrap.minute[1])
+	//	for k := 0; k < arr; k++ {
+	//		hou = extrap.hour[i] - ptime.hour[i]
+	//		min = (extrap.minute[i]- ptime.minute[i]) + hou*60
+	//		fmt.Printf("时间差 %v \n",min)
+	//		if min < 0 {
+	//			min = 0 - min
+	//		}
+	//		if  float64(min) < t {
+	//			f=1
+	//		}else {
+	//			f=-1
+	//			break
+	//		}
+	//	}
+	//	}
+	if timejudgef(n,p,t)>0 {
+		for i := 0; i < 2; i++ {
+			extrap = timehanshu(p.hour[i], p.hour[i+1], p.minute[i], p.minute[i+1], arr)
+			for j := 0; j < arr; j++ {
+				fmt.Printf("h %v m %v \n", extrap.hour[j], extrap.minute[j])
 			}
-			if min < 20 {
-				f=1
-			}else{
-				f=-1
-				break
-			}
-			fmt.Println(min)
-		}
-		if i == 0 {
-			timehanshu(p.hour[i], p.hour[i+1], p.minute[i], p.minute[i+1],arr)
+			ptime := timehanshu(patient.hour[i], patient.hour[i+1], patient.minute[i], patient.minute[i+1], arr)
 			for k := 0; k < arr; k++ {
-				for j := 0; j < m; j++ {
-					hou = extrap.hour[j] - patient.hour[j]
-					min = (p.minute[i] - patient.minute[j]) + hou*60
-					if min < 0 {
-						min = 0 - min
-					}
-					if min < 20 {
-						f=1
-					}else {
-						f=-1
-						break
-					}
+				hou = extrap.hour[i] - ptime.hour[i]
+				min = (extrap.minute[i] - ptime.minute[i]) + hou*60
+				fmt.Printf("时间差 %v \n", min)
+				if min < 0 {
+					min = 0 - min
+				}
+				if float64(min) < t {
+					f = 1
+				} else {
+					f = -1
+					break
 				}
 			}
 		}
-
 	}
 	//	fmt.Printf("%d\n",f)
 	return f
@@ -272,14 +304,10 @@ func Count(now send.Date,e float64,t float64) ([]string,[]string) {
 		patient.minute[1] = ed.Minute()
 		var fen float64
 		fen = 0
-		fen = float64(timejudgef(n,p,t))
+		fen = float64(timejudge(n,p,t))
 		if fen >= 0 {
 			//fmt.Printf("%v %d\n",Tid,fen)
 			fen = float64(distance(n, p,e))
-			//fmt.Printf("fen is %v\n",fen)
-			//fmt.Printf("tid is %d\n",cnt)
-			//fmt.Printf("dis is %v",distance(n,p))
-			//fmt.Printf("area is %v",area(n,p)/100)
 
 			if fen != 0 {
 				//dict[name] = fen
